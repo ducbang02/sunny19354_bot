@@ -1,7 +1,7 @@
 # Sunny 2.0 — sunny19354_bot
 
 ## Overview
-Telegram bot cá nhân @sunny19354_bot giúp chủ bot ghi chú và tạo reminder. Bot đã được tạo qua BotFather. Đây là giai đoạn bootstrap, chưa triển khai feature.
+Telegram bot cá nhân @sunny19354_bot giúp chủ bot ghi chú và tạo reminder. Bot đã được tạo qua BotFather. V1 đã được triển khai và được kiểm tra tự động; kiểm tra Telegram thật chờ cấu hình local.
 
 ## Target Users
 Một chủ bot, sử dụng trong chat riêng Telegram.
@@ -47,7 +47,7 @@ Token chỉ nằm trong .env hoặc biến môi trường; không log token, req
 Windows local trước. Máy cần bật và kết nối Internet để gửi nhắc đúng giờ. Múi giờ mặc định Asia/Bangkok (UTC+7), lưu thời điểm UTC. Chạy 24/7 và môi trường cloud sẽ chọn sau.
 
 ## Git
-Remote dự kiến: https://github.com/ducbang02/sunny19354_bot.git; branch main. Chưa xác nhận repository từ xa, visibility hay quyền push; không tự tạo repository khi quyền tạo còn để trống trong prompt.
+Origin: https://github.com/ducbang02/sunny19354_bot.git. Remote tồn tại và trống tại lần kiểm tra ban đầu. Bootstrap ở main; implementation ở feat/personal-assistant. Trạng thái checkpoint/push ghi tại docs/TASKS.md.
 
 ## Definition of Done
 - Flow ghi chú và reminder chạy end-to-end trong Telegram với chủ bot.

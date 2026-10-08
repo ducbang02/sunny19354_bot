@@ -1,77 +1,100 @@
 # Sunny 2.0
 
-Bot Telegram cá nhân @sunny19354_bot: ghi chú và reminder. Đang bootstrap, chưa có chương trình bot để chạy. Phạm vi: PROJECT.md; tiến độ: docs/TASKS.md.
+Telegram bot cá nhân **@sunny19354_bot**: ghi chú và reminder một lần. Chạy local bằng Python, lưu SQLite, chỉ chủ bot sử dụng trong chat riêng.
 
-## Audit môi trường — 2026-10-08
+Phạm vi: [PROJECT.md](PROJECT.md). Tiến độ: [docs/TASKS.md](docs/TASKS.md). Roadmap: [docs/ROADMAP.md](docs/ROADMAP.md).
 
-| Nhóm | Công cụ | Trạng thái / đề xuất |
-| --- | --- | --- |
-| Runtime | Python 3.13.15, Git 2.53, uv 0.11.8, Node 24.18 | Đã chạy version check; không cần cài lại |
-| Codex plugin/skill | Superpowers | Chưa cài; nên dùng để hỗ trợ planning/debugging/verification |
-| MCP/plugin | Context7 | Chưa cài trong directory; CLI/session chưa có MCP tương ứng; nên dùng để tra docs |
-| Dev tool | Gitleaks | Không tìm thấy trên PATH; nên cài để kiểm tra secrets |
-| Dev dependency | pytest | Chưa có trong Python hiện tại; cài local trong .venv |
-| Runtime dependencies | python-telegram-bot, python-dotenv, tzdata | Chưa có trong Python hiện tại; requirements.txt đã chuẩn bị |
-| Skill | Ponytail | Chưa có trong danh sách skill phiên này; tùy chọn, AGENTS.md đã chứa nguyên tắc cốt lõi |
-| Tool | Serena, Spec Kit | Chưa cần cho V1 nhỏ |
-| UI/browser | UI/UX Pro Max, Playwright MCP | Chưa cần cho Telegram bot không có web UI |
-| Dev tool | Ruff | Không tìm thấy; tùy chọn sau, chưa thêm dependency |
-| Shell | PowerShell 7 (pwsh) | Không thấy trên PATH; Windows PowerShell hiện tại đã chạy được, không bắt buộc cài |
+## Cài đặt
 
-Kết quả package chỉ áp dụng interpreter Python đã kiểm tra, không kết luận về mọi môi trường khác trên máy. Công cụ hỗ trợ agent không phải dependency runtime của bot.
-
-## 1. Tự cài Superpowers và Context7
-
-Trong Codex, mở phần plugin và tìm **Superpowers**, **Context7**, rồi chọn cài và hoàn tất bước kết nối nếu được yêu cầu. Hai plugin này đã được tìm thấy trong directory với trạng thái chưa cài. Cài ở Codex, không clone source tool vào repository bot.
-
-Sau đó mở phiên Codex mới hoặc restart nếu ứng dụng yêu cầu. Nhờ agent kiểm tra skills/tools đã load và thực hiện một tra cứu docs bằng Context7; chỉ hiện trong danh sách chưa đủ chứng minh công cụ hoạt động. Nếu dùng nhiều bề mặt Codex/IDE, verify lại tại nơi sẽ phát triển bot.
-
-Nguồn: [Superpowers](https://github.com/obra/superpowers), [Context7](https://github.com/upstash/context7), [OpenAI Docs về skills](https://learn.chatgpt.com/docs/build-skills).
-
-## 2. Tự cài thư viện Python trong project
-
-Mở terminal PowerShell tại repository, chạy từng lệnh:
+Yêu cầu Python 3.13. Mở PowerShell tại repository:
 
 ~~~powershell
 Set-Location 'D:\Workspace\Bot\sunny19354_bot'
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements.lock
 .\.venv\Scripts\python.exe -m pip check
-.\.venv\Scripts\python.exe -m pytest --version
-.\.venv\Scripts\python.exe -c "import telegram, dotenv, tzdata; from telegram.ext import JobQueue; print('Imports OK; PTB', telegram.__version__)"
 ~~~
 
-Gọi trực tiếp Python trong .venv nên không cần activate hay thay ExecutionPolicy. Lệnh install sẽ cài thư viện bot và pytest vào project, không cài global. Chưa có test ứng dụng; pytest --version chỉ kiểm tra cài đặt. Sau khi cài, agent sẽ kiểm tra phiên bản đã resolve và khóa dependency trước checkpoint phù hợp.
+requirements.lock khóa phiên bản runtime và pytest đã được verify. requirements.txt và requirements-dev.txt mô tả dependency trực tiếp. Không cần activate .venv, đổi ExecutionPolicy hoặc cài thư viện Python global. VS Code: Python: Select Interpreter → .venv/Scripts/python.exe.
 
-Nguồn thư viện: [python-telegram-bot](https://docs.python-telegram-bot.org/en/stable/).
+## Cấu hình
 
-## 3. Tự cài Gitleaks
-
-Mở [Gitleaks Releases](https://github.com/gitleaks/gitleaks/releases/latest), tải archive Windows phù hợp kiến trúc máy ở Assets và giải nén vào thư mục công cụ riêng. Có thể thêm thư mục chứa gitleaks.exe vào User PATH rồi mở terminal mới; hoặc gọi bằng đường dẫn đầy đủ, không cần PATH.
+Nếu chưa có .env:
 
 ~~~powershell
-# Nếu đã thêm vào PATH:
-gitleaks version
-gitleaks dir . --redact
+if (-not (Test-Path -LiteralPath .env)) { Copy-Item .env.example .env }
+notepad .env
 ~~~
 
-Nếu dùng đường dẫn đầy đủ, ví dụ:
+Điền trực tiếp trên máy:
+
+| Biến | Ý nghĩa |
+| --- | --- |
+| TELEGRAM_BOT_TOKEN | Token từ BotFather; không gửi vào chat hoặc Git |
+| OWNER_TELEGRAM_ID | Numeric Telegram user ID của bạn, không phải username |
+| BOT_TIMEZONE | Múi giờ IANA, mặc định Asia/Bangkok (UTC+7) |
+| DATABASE_PATH | File SQLite; mặc định data/bot.sqlite3, đường dẫn tương đối tính từ root project |
+| PTB_TIMEDELTA | Đặt 1 theo mẫu để dùng kiểu thời gian mới cho retry_after của PTB |
+
+Có thể lấy numeric ID bằng bot thông tin user mà bạn tin tưởng; chỉ gửi /start, không cung cấp bot token. Hoặc dùng Telegram Bot API getUpdates trên máy với token local để đọc message.from.id; không đưa token vào URL trình duyệt/chat. Tài liệu: [Telegram Bot API](https://core.telegram.org/bots/api#getupdates).
+
+Kiểm tra cấu hình (không gọi Telegram hoặc tạo DB):
 
 ~~~powershell
-& 'C:\Tools\gitleaks\gitleaks.exe' version
-& 'C:\Tools\gitleaks\gitleaks.exe' dir . --redact
+.\.venv\Scripts\python.exe -m sunny_bot --check-config
 ~~~
 
-Đổi đường dẫn ví dụ thành vị trí bạn đã giải nén. Chỉ exit code 0 mới coi scan đạt. Gitleaks hiện được maintainer thông báo chỉ nhận security patches; vẫn phù hợp bước quét secrets của bootstrap này. [Nguồn](https://github.com/gitleaks/gitleaks).
+Thiếu hoặc sai cấu hình: exit 2 với thông báo an toàn. Khi hợp lệ: Configuration OK.
 
-## 4. Cấu hình riêng trên máy
+## Chạy bot
 
 ~~~powershell
-Copy-Item .env.example .env
+.\.venv\Scripts\python.exe -m sunny_bot
 ~~~
 
-Chỉ chạy copy khi chưa có .env. Tự điền TELEGRAM_BOT_TOKEN và numeric OWNER_TELEGRAM_ID bằng editor; không paste token vào chat. SQLite/runtime data và .env đã được ignore. Chưa có feature để lấy user ID trong bot; agent sẽ hướng dẫn lấy ID qua Telegram sau khi foundation sẵn sàng, không cần gửi token.
+Mở chat riêng với @sunny19354_bot, gửi /start. Dừng bằng Ctrl+C. Chỉ chạy một tiến trình polling cho cùng token và file DB.
 
-## Tiếp tục
+| Lệnh | Ví dụ |
+| --- | --- |
+| /help | Hướng dẫn và múi giờ hiện tại |
+| /note <nội dung> | /note Mua sữa |
+| /notes [trang] | /notes hoặc /notes 2 |
+| /delnote <id> | /delnote 1 |
+| /remind YYYY-MM-DD HH:MM <nội dung> | /remind 2030-12-01 09:00 Họp nhóm |
+| /reminders [trang] | /reminders |
+| /cancel <id> | /cancel 1 |
 
-Báo lại những mục đã cài hoặc muốn bỏ qua. Agent verify môi trường, chuẩn bị baseline, quét secrets, commit bootstrap rồi triển khai milestone đầu. Không bắt buộc cài Superpowers/Context7 để bot chạy; có thể chọn bỏ qua. Chưa commit, chưa kết nối remote hoặc push; remote dự kiến https://github.com/ducbang02/sunny19354_bot.git. Chưa tự tạo GitHub repository vì prompt chưa xác nhận quyền tạo/visibility.
+Thời gian phải ở tương lai và theo BOT_TIMEZONE. Mỗi ghi chú/reminder tối đa 1000 đơn vị UTF-16 (emoji thường tính là 2). Giữ được xuống dòng và nội dung dạng HTML dưới dạng chữ thường; danh sách 20 mục/trang, tự chia tin nhắn dài. Group, người khác và tin nhắn đã chỉnh sửa không được xử lý.
+
+Reminder lưu UTC, được khôi phục khi restart; mục quá hạn gửi sau khi bot chạy lại. Nếu Telegram hoặc SQLite lỗi, reminder còn pending và thử lại sau ít nhất 60 giây, tuân theo RetryAfter. Nếu tin đã gửi mà SQLite tạm lỗi, bot chỉ thử lưu lại trạng thái trong cùng phiên chạy, không gửi lại tin. Không đảm bảo gửi đúng giờ khi máy ngủ/tắt/mất mạng. Có thể gửi trùng nếu tiến trình dừng ngay sau khi Telegram nhận tin nhưng trước khi SQLite ghi sent; timeout mạng cũng có thể khiến trạng thái giao tin không chắc chắn. Hủy lịch không thu hồi tin nhắn đã gửi.
+
+## Kiểm thử
+
+~~~powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m compileall -q sunny_bot tests
+.\.venv\Scripts\python.exe -m pip check
+~~~
+
+Test dùng SQLite thật và Application/JobQueue thật, thay riêng HTTP transport Telegram; không cần token hoặc gửi tin ra ngoài. Chưa verify Telegram thật vì repository chưa có .env.
+
+Kiểm tra thủ công sau khi cấu hình: /start → tạo/xem/xóa note; tạo reminder vài phút tới → nhận tin; tạo reminder khác → restart → kiểm tra vẫn gửi; hủy reminder → kiểm tra không gửi; thử từ user khác/group → không có dữ liệu phản hồi.
+
+## Công cụ agent / bảo mật
+
+Audit 2026-10-08:
+- Superpowers đã nạp; Context7 MCP đã cấu hình và gọi resolve-library-id/query-docs thành công. Không cài lại.
+- python-telegram-bot 22.8, python-dotenv 1.2.4, tzdata 2026.5, pytest 9.1.1 đã cài riêng trong .venv.
+- Gitleaks 8.30.1 được tải từ release chính thức, xác minh SHA256 và cài local tại .tools/gitleaks/gitleaks.exe. Thư mục .tools không vào Git.
+- Git/Python/uv/Node đã có. Chưa cần Serena, Spec Kit, UI/UX, Playwright hoặc plugin runtime.
+- PowerShell có thể chặn codex.ps1; dùng codex.cmd thay thế, không cần đổi policy hệ thống.
+
+Quét staged files trước commit bằng Gitleaks local (máy đã cài):
+
+~~~powershell
+.\.tools\gitleaks\gitleaks.exe git --pre-commit --staged --redact
+~~~
+
+Nếu clone trên máy khác, tải bản Windows phù hợp từ [Gitleaks Releases](https://github.com/gitleaks/gitleaks/releases/latest), giải nén vào cùng vị trí hoặc gọi đường dẫn đã cài. Chỉ xem scan thành công khi công cụ thực sự quét dữ liệu và không báo lỗi; không chỉ dựa exit code.
+
+.env, .venv, .tools và data/ được ignore. Token không có trong source/log. SQLite chứa ghi chú dạng rõ; bảo vệ bằng quyền tài khoản Windows của bạn. Backup: dừng bot, sao chép data/bot.sqlite3 vào vị trí riêng; khôi phục khi bot đã dừng. Không commit DB hoặc bản sao lưu.
