@@ -15,7 +15,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip check
 ~~~
 
-requirements.lock khóa phiên bản runtime và pytest đã được verify. requirements.txt và requirements-dev.txt mô tả dependency trực tiếp. Không cần activate .venv, đổi ExecutionPolicy hoặc cài thư viện Python global. VS Code: Python: Select Interpreter → .venv/Scripts/python.exe.
+requirements.lock khóa phiên bản runtime và pytest đã được verify. requirements.txt và requirements-dev.txt mô tả dependency trực tiếp. Không cần activate .venv, đổi ExecutionPolicy hoặc cài thư viện Python global. VS Code: workspace mặc định mở Git Bash và tự activate môi trường Python cho terminal mới. Nếu VS Code đã nhớ interpreter khác, chạy Python: Select Interpreter → .venv/Scripts/python.exe một lần, rồi đóng terminal cũ và tạo terminal mới. Dấu (.venv) biểu thị môi trường Python; tên trong ngoặc ở prompt Git Bash là nhánh Git hiện tại.
 
 ## Cấu hình
 

@@ -1,0 +1,15 @@
+{
+  "terminal.integrated.profiles.windows": {
+    "Git Bash": {
+      "source": "Git",
+      "args": [
+        "--login",
+        "-i"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv",
+  "python.terminal.activateEnvironment": true,
+  "python-envs.terminal.autoActivationType": "command"
+}

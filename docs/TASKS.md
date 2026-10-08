@@ -50,3 +50,8 @@ Môi trường: Git/Python/uv/Node có sẵn; Superpowers/Context7 đã có; th�
 - Review fix: hai regression tests tái hiện SQLite read/commit failures trước sửa; sau sửa tự retry và không gửi lại tin đã thành công trong cùng phiên. Thêm kiểm thử hủy đồng thời và hủy sau lỗi commit.
 - Ruling: /notes và /reminders hiển thị toàn bộ nội dung trong chunks <=4000 UTF-16 units, thay vì cắt tóm tắt vì V1 không có lệnh đọc riêng; đổi lại danh sách dài có nhiều tin nhắn.
 - Giới hạn đã ghi README: sau crash hoặc timeout giao tin có thể trùng; chưa bảo đảm exactly-once. Máy cần bật/kết nối mạng.
+
+## Terminal workspace — 2026-10-08
+- [x] Thêm .vscode/settings.json: Git Bash mặc định, chọn .venv và auto activation cho terminal mới.
+- [x] Kiểm tra JSON và tên setting với manifest extension Python đã cài; README có hướng dẫn chọn lại interpreter nếu VS Code đã nhớ lựa chọn cũ.
+- [ ] Quan sát terminal VS Code mới thực tế sau reload; agent chưa có truy cập UI terminal.
