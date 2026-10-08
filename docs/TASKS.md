@@ -9,7 +9,7 @@
 - [x] Cài Gitleaks local .tools, xác minh SHA256 release chính thức; không cài thêm plugin không cần thiết.
 - [x] Initial commit 3c73d48 (chore: bootstrap project), đã quét secrets trước commit.
 - [x] Xác nhận remote tồn tại, ban đầu trống; cấu hình origin theo URL người dùng cung cấp.
-- [ ] Push checkpoint sau kiểm tra cuối.
+- [x] Push main (bootstrap) và feat/personal-assistant lên origin thành công.
 
 ## Milestone 1 — Foundation
 - [x] Config validation, polling, giới hạn chủ bot/chat riêng, /start và /help.
@@ -34,11 +34,11 @@
 - [x] README hướng dẫn cài/chạy/test/cấu hình/backup và giới hạn giao tin.
 - [x] Kiểm tra .env, .venv, .tools và data bị ignore; .env.example được track.
 - [x] Review độc lập; sửa phát hiện Important về SQLite và bổ sung regression tests.
-- [ ] Secret scan staged files và commit implementation.
+- [x] Gitleaks quét staged files (~39.58 KB), không phát hiện secrets; implementation commit eecadb8.
 - [ ] Hoàn tất Definition of Done sau kiểm tra Telegram thật.
 
 ## Handoff — 2026-10-08
-Development branch: feat/personal-assistant. Foundation/SQLite checkpoint: 214fd1d.
+Development branch: feat/personal-assistant, đã push origin. Foundation/SQLite checkpoint: 214fd1d; notes/reminders: eecadb8. Main giữ bootstrap 3c73d48; chưa merge implementation vào main.
 Implementation và kiểm thử tự động đã sẵn sàng; chưa có .env nên chưa chạy bot với Telegram thật. Bước phụ thuộc người dùng: copy .env.example thành .env, điền token/OWNER_TELEGRAM_ID tại máy, chạy --check-config rồi khởi động theo README. Không yêu cầu gửi credentials vào chat.
 
 Môi trường: Git/Python/uv/Node có sẵn; Superpowers/Context7 đã có; thư viện thiếu đã được cài riêng .venv theo yêu cầu mới. Gitleaks local tại .tools/gitleaks/gitleaks.exe. Không cần cài global các thư viện của bot. codex.cmd dùng được khi PowerShell chặn codex.ps1; không đổi policy hệ thống.

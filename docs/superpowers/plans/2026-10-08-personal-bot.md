@@ -47,7 +47,9 @@
 - [x] Implement command handlers with explicit authorization checks; preserve body text. Limit body to 1000 UTF-16 units, full list content in messages of at most 4000 UTF-16 units, 20 entries/page. Validate positive integer IDs/pages, strict dates, future time and DST validity.
 - [x] Persist before scheduling, query pending state at delivery and mark sent only after success. Serialize delivery/cancellation with an asyncio lock. Retry Telegram/SQLite failures with delay >=60s or RetryAfter; remember successful sends in memory until SQLite commits to avoid in-process duplicate delivery. Restore all pending reminders at post_init including overdue; retain missed in-session jobs with misfire_grace_time=None.
 - [x] Run whole suite, compile, pip check, config CLI failure and local fake Telegram flow. Expected: pass; missing real credentials remain explicitly pending.
-- [ ] Update docs and actual commands; secret scan before commit; independent final review and address important findings with regression tests.
+- [x] Update docs and actual commands; secret scan before commit; independent final review and address important findings with regression tests.
 
 ## Execution record
 Native execution authorized by user's request to install missing dependencies and continue. Existing PROJECT.md supplies scope; no extra product approval needed. Initial baseline: pip check and import/JobQueue smoke passed; no pre-existing application tests. Windows-specific adaptation: use Python/PowerShell and docs/TASKS.md as the durable ledger instead of Bash-only skill helpers. No shared worktree to protect; create a feature branch after initial commit.
+
+Final verification: 61 tests passed; compileall and pip check passed. Missing-token CLI exit 2 verified directly. Gitleaks scanned staged data with no leaks. Implementation committed and pushed on feat/personal-assistant; live Telegram checks remain pending local .env as tracked in docs/TASKS.md.
