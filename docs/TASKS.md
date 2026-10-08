@@ -55,3 +55,12 @@ Môi trường: Git/Python/uv/Node có sẵn; Superpowers/Context7 đã có; th�
 - [x] Thêm .vscode/settings.json: Git Bash mặc định, chọn .venv và auto activation cho terminal mới.
 - [x] Kiểm tra JSON và tên setting với manifest extension Python đã cài; README có hướng dẫn chọn lại interpreter nếu VS Code đã nhớ lựa chọn cũ.
 - [ ] Quan sát terminal VS Code mới thực tế sau reload; agent chưa có truy cập UI terminal.
+
+## Terminal repair — 2026-10-08
+- [x] Tái hiện Git Bash mới chưa activate .venv và Git báo dubious ownership do .git thuộc tài khoản sandbox.
+- [x] Đổi default profile cấp người dùng từ bash (MSYS2) sang Git Bash; giữ nguyên các setting khác.
+- [x] Thêm activation block trong ~/.bashrc, chỉ áp dụng khi terminal khởi động trong project này; không phụ thuộc Python extension đã chọn interpreter.
+- [x] Thêm safe.directory đúng D:/Workspace/Bot/sunny19354_bot cho tài khoản Sunny; không tin cậy wildcard.
+- [x] Sao lưu settings.json, .bashrc và .gitconfig trước khi sửa tại C:/Users/Sunny/.codex/backups/terminal-20261008-195712.
+- [x] Git Bash login/interactive mới: Python dùng venv, prompt có (.venv), __git_ps1 trả (feat/personal-assistant); lặp lại kiểm tra vẫn pass. Ngoài project không tự activate venv.
+- Lưu ý: kiểm tra bằng tiến trình Git Bash thật; agent chưa quan sát trực tiếp terminal UI VS Code. Cấu hình áp dụng cho terminal tạo mới.
