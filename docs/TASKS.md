@@ -35,3 +35,8 @@
 Người dùng yêu cầu tự cài công cụ lần đầu; agent chưa cài dependency/plugin nào và chưa viết feature. Superpowers/Context7 được directory báo chưa cài; chưa có MCP tương ứng trong CLI/session. Gitleaks, pytest, python-telegram-bot, python-dotenv, tzdata chưa có trong Python được kiểm tra. Git/Python/uv/Node đã có.
 
 Terminal exec mặc định lỗi helper_unknown_error; đọc file và chạy lệnh kiểm tra được qua Node REPL/child_process. Đây không phải bằng chứng máy thiếu PowerShell. Bước tiếp theo: người dùng cài/chọn bỏ qua tool theo README, sau đó agent verify lại; chỉ tiếp tục development sau bootstrap theo SETUP.md. Initial commit/push chưa thực hiện. Remote URL đã được cung cấp nhưng quyền tạo repo/visibility chưa được xác định.
+
+## Execution ledger
+- Task 1: Config/CLI RED 15 failures → GREEN 15 passed. Safe config check has no network/DB side effects.
+- Task 2: SQLite persistence RED 8 failures → GREEN suite 23 passed; CRUD, pagination, UTC, restart and conditional cancellation/sent verified.
+- Ruling: /notes and /reminders will show full content in <=4000 UTF-16-unit chunks, rather than truncating summaries; otherwise there is no V1 command to read a saved long note. Cost if wrong: more Telegram messages on long lists.
