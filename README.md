@@ -76,7 +76,7 @@ Reminder lưu UTC, được khôi phục khi restart; mục quá hạn gửi sau
 .\.venv\Scripts\python.exe -m pip check
 ~~~
 
-Test dùng SQLite thật và Application/JobQueue thật, thay riêng HTTP transport Telegram; không cần token hoặc gửi tin ra ngoài. Chưa verify Telegram thật vì repository chưa có .env.
+Test dùng SQLite thật và Application/JobQueue thật, thay riêng HTTP transport Telegram; không cần token hoặc gửi tin ra ngoài. Các test CLI được cô lập khỏi .env thật của người dùng.
 
 Kiểm tra thủ công sau khi cấu hình: /start → tạo/xem/xóa note; tạo reminder vài phút tới → nhận tin; tạo reminder khác → restart → kiểm tra vẫn gửi; hủy reminder → kiểm tra không gửi; thử từ user khác/group → không có dữ liệu phản hồi.
 

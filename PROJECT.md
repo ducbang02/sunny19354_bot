@@ -1,7 +1,7 @@
 # Sunny 2.0 — sunny19354_bot
 
 ## Overview
-Telegram bot cá nhân @sunny19354_bot giúp chủ bot ghi chú và tạo reminder. Bot đã được tạo qua BotFather. V1 đã được triển khai và được kiểm tra tự động; kiểm tra Telegram thật chờ cấu hình local.
+Telegram bot cá nhân @sunny19354_bot giúp chủ bot ghi chú và tạo reminder. Bot đã được tạo qua BotFather. V1 đã qua kiểm thử tự động và kiểm tra handler/JobQueue với API Telegram thật. Luồng nhận lệnh từ tài khoản người dùng qua polling còn chờ xác minh; chi tiết tại docs/TASKS.md.
 
 ## Target Users
 Một chủ bot, sử dụng trong chat riêng Telegram.

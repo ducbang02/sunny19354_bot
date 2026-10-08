@@ -13,7 +13,7 @@ Tạo/xem/xóa ghi chú bằng SQLite; validate nội dung/ID; kiểm tra persis
 Tạo/xem/hủy reminder một lần; UTC và múi giờ; phục hồi lịch sau restart; xử lý thời điểm sai và reminder quá hạn.
 
 ## 4 — Quality và chạy local (hiện tại)
-Implementation milestone 1–3 đã qua kiểm thử tự động, gồm retry API/SQLite và hủy đồng thời. Đã có hướng dẫn sử dụng/backup. Còn kiểm tra Telegram thật và restart local sau khi chủ bot điền .env; xem checklist chi tiết tại TASKS.md.
+Implementation milestone 1–3 đã qua kiểm thử tự động, gồm retry API/SQLite và hủy đồng thời. Handler và JobQueue đã được kiểm tra với API Telegram thật bằng database test riêng, gồm khôi phục sau khi tạo lại Application. Còn xác minh luồng nhận lệnh qua polling từ tài khoản Telegram của chủ bot; xem checklist tại TASKS.md.
 
 ## Backlog đề xuất (chưa triển khai)
 - Bản tin BBC hằng ngày: chọn chuyên mục, ngôn ngữ và giờ gửi; dùng RSS/API được phép, tiêu đề và link nguồn, không sao chép toàn bài.

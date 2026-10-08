@@ -53,6 +53,7 @@ def test_dotenv_does_not_override_process_env(clean_env):
 
 
 def test_check_config_does_not_create_database_or_call_network(monkeypatch, clean_env, tmp_path):
+    monkeypatch.setenv("PYTHON_DOTENV_DISABLED", "1")
     db = tmp_path / "unused.sqlite3"
     monkeypatch.setenv("DATABASE_PATH", str(db))
     result = subprocess.run([sys.executable, "-m", "sunny_bot", "--check-config"], capture_output=True, text=True)
@@ -63,6 +64,8 @@ def test_check_config_does_not_create_database_or_call_network(monkeypatch, clea
 
 
 def test_cli_missing_owner_exits_safely(monkeypatch, clean_env):
+    # Isolate the subprocess from the user's real project .env.
+    monkeypatch.setenv("PYTHON_DOTENV_DISABLED", "1")
     monkeypatch.delenv("OWNER_TELEGRAM_ID")
     result = subprocess.run([sys.executable, "-m", "sunny_bot", "--check-config"], capture_output=True, text=True)
     assert result.returncode == 2

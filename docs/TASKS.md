@@ -14,19 +14,21 @@
 ## Milestone 1 — Foundation
 - [x] Config validation, polling, giới hạn chủ bot/chat riêng, /start và /help.
 - [x] Test cấu hình thiếu/sai, --check-config không tạo DB/kết nối mạng, quyền truy cập và handler.
-- [ ] Verify Telegram thật bằng token người dùng tự điền vào .env; không gửi token vào chat.
+- [x] Verify token local, owner chat và menu 8 lệnh qua Telegram API thật; không lộ token.
+- [ ] Verify lệnh từ tài khoản Telegram thật đi qua polling vào bot đang chạy.
 
 ## Milestone 2 — Ghi chú
 - [x] Tạo/xem/xóa SQLite, validation và phản hồi tiếng Việt.
 - [x] Test CRUD, ID không tồn tại, Unicode/xuống dòng, input lỗi, phân trang và persistence qua restart.
-- [ ] Verify flow trên Telegram thật.
+- [x] Verify handler tạo/xem/xóa ghi chú và phản hồi qua Telegram API thật với DB test riêng.
 
 ## Milestone 3 — Reminder
 - [x] Tạo/xem/hủy, múi giờ, lưu UTC, phục hồi lịch và xử lý reminder quá hạn.
 - [x] Test ngày/giờ lỗi, DST, hủy, restart, JobQueue đến hạn/quá hạn và lỗi API/rate limit.
 - [x] Retry lỗi SQLite; tin đã gửi chỉ retry lưu trạng thái trong cùng phiên chạy.
 - [x] Test hủy trong lúc đang gửi và sau khi gửi nhưng SQLite chưa ghi được trạng thái.
-- [ ] Verify gửi nhắc thật và restart local.
+- [x] Verify gửi nhắc thật bằng JobQueue và phục hồi DB/lịch khi tạo lại Application test.
+- [ ] Verify luồng tạo reminder từ tài khoản Telegram thật qua polling và restart tiến trình bot chính.
 
 ## Milestone 4 — Quality
 - [x] 61 tests pass; compileall và pip check pass.
@@ -39,7 +41,7 @@
 
 ## Handoff — 2026-10-08
 Development branch: feat/personal-assistant, đã push origin. Foundation/SQLite checkpoint: 214fd1d; notes/reminders: eecadb8. Main giữ bootstrap 3c73d48; chưa merge implementation vào main.
-Implementation và kiểm thử tự động đã sẵn sàng; chưa có .env nên chưa chạy bot với Telegram thật. Bước phụ thuộc người dùng: copy .env.example thành .env, điền token/OWNER_TELEGRAM_ID tại máy, chạy --check-config rồi khởi động theo README. Không yêu cầu gửi credentials vào chat.
+Người dùng đã điền .env; --check-config pass. Bot chính đang chạy. Đã kiểm tra handler/JobQueue với API Telegram thật, dùng DB tạm riêng và không dừng bot chính. Còn luồng nhận lệnh từ tài khoản Telegram qua polling và restart tiến trình chính; không yêu cầu gửi credentials vào chat.
 
 Môi trường: Git/Python/uv/Node có sẵn; Superpowers/Context7 đã có; thư viện thiếu đã được cài riêng .venv theo yêu cầu mới. Gitleaks local tại .tools/gitleaks/gitleaks.exe. Không cần cài global các thư viện của bot. codex.cmd dùng được khi PowerShell chặn codex.ps1; không đổi policy hệ thống.
 
@@ -54,7 +56,7 @@ Môi trường: Git/Python/uv/Node có sẵn; Superpowers/Context7 đã có; th�
 ## Terminal workspace — 2026-10-08
 - [x] Thêm .vscode/settings.json: Git Bash mặc định, chọn .venv và auto activation cho terminal mới.
 - [x] Kiểm tra JSON và tên setting với manifest extension Python đã cài; README có hướng dẫn chọn lại interpreter nếu VS Code đã nhớ lựa chọn cũ.
-- [ ] Quan sát terminal VS Code mới thực tế sau reload; agent chưa có truy cập UI terminal.
+- [x] Người dùng xác nhận terminal hoạt động sau khởi động lại; agent không trực tiếp quan sát UI.
 
 ## Terminal repair — 2026-10-08
 - [x] Tái hiện Git Bash mới chưa activate .venv và Git báo dubious ownership do .git thuộc tài khoản sandbox.
@@ -64,3 +66,15 @@ Môi trường: Git/Python/uv/Node có sẵn; Superpowers/Context7 đã có; th�
 - [x] Sao lưu settings.json, .bashrc và .gitconfig trước khi sửa tại C:/Users/Sunny/.codex/backups/terminal-20261008-195712.
 - [x] Git Bash login/interactive mới: Python dùng venv, prompt có (.venv), __git_ps1 trả (feat/personal-assistant); lặp lại kiểm tra vẫn pass. Ngoài project không tự activate venv.
 - Lưu ý: kiểm tra bằng tiến trình Git Bash thật; agent chưa quan sát trực tiếp terminal UI VS Code. Cấu hình áp dụng cho terminal tạo mới.
+
+## VS Code terminal follow-up — 2026-10-08
+User reported Terminal > New Terminal and + still open CMD. Prior verification covered a separately launched Git Bash, not the VS Code UI. Native Computer Use connection failed twice (native pipe unavailable). User settings had returned to MSYS2. Set Git Bash to the explicit executable path at user/workspace levels and backed up user settings again. VS Code window reload and actual integrated-terminal verification remain pending; do not claim this UI issue resolved from the standalone-shell test alone.
+
+Follow-up: người dùng xác nhận ổn sau khởi động lại. File .vscode/settings.json hiện bị xóa trong working tree; giữ nguyên thay đổi này, không tự khôi phục.
+
+## Feature verification — 2026-10-08
+- [x] Chạy suite với .env thật tồn tại: phát hiện test CLI missing-owner đọc lại owner từ .env (60 pass, 1 fail). Cô lập subprocess bằng PYTHON_DOTENV_DISABLED=1 theo docs python-dotenv; suite cuối 61 pass.
+- [x] Config check, pip check và compileall pass.
+- [x] Live smoke: 10 nhóm kiểm tra pass, Telegram chấp nhận 17 tin nhắn tới chat riêng của owner: menu/auth; start/help; note CRUD/Unicode/newline/literal HTML; ID thiếu; từ chối user/group/edited; input lỗi; remind/list/cancel/UTC; stale job; SQLite persistence; restore idempotent; reminder quá hạn/tương lai gửi thật.
+- [x] Dùng SQLite tạm riêng và dọn sau test; không đọc/sửa DB cá nhân, không chạy polling thứ hai, không dừng bot chính. Hai Python process bot hiện tại là launcher và child, không phải hai poller riêng.
+- Giới hạn: update đầu vào được mô phỏng vào Application.process_update, còn HTTP Telegram và JobQueue chạy thật. Tạo lại Application kiểm tra khôi phục state, chưa phải restart tiến trình chính. Browser/desktop automation không kết nối được trong session này nên chưa tự gửi command từ tài khoản Telegram qua UI. Definition of Done end-to-end vẫn để pending.
